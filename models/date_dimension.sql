@@ -8,11 +8,14 @@ with CTE as (
     {{day_type('STARTED_AT')}} AS DAY_TYPE,
     {{get_season('STARTED_AT')}} AS SEASON_OF_THE_YEAR
 
-from 
-{{ source('demo', 'bike') }}
-where STARTED_AT != 'STARTED_AT'
+    from {{ ref('stg_bike') }}
+    where UPPER(TRIM(STARTED_AT)) != 'STARTED_AT'
+      and TRIM(STARTED_AT) != ''
+      and STARTED_AT is not null
+      and TRY_TO_TIMESTAMP(STARTED_AT) is not null
 )
 
 select 
     *
-from CTEs
+from CTE
+order by DATE_STARTED_AT desc 
