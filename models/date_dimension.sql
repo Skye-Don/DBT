@@ -1,5 +1,7 @@
+{{ config(materialized='table') }}
+
 with CTE as (
-    select
+    select 
     TO_TIMESTAMP(STARTED_AT) AS STARTED_AT,
     DATE(TO_TIMESTAMP(STARTED_AT)) AS DATE_STARTED_AT,
     HOUR(TO_TIMESTAMP(STARTED_AT)) AS HOUR_STARTED_AT,
@@ -8,9 +10,9 @@ with CTE as (
 
 from 
 {{ source('demo', 'bike') }}
-where STARTED_AT != 'start_at'
+where STARTED_AT != 'STARTED_AT'
 )
 
 select 
     *
-from CTE
+from CTEs
